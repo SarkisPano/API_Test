@@ -1,0 +1,71 @@
+openapi: 3.0.2
+    info:
+      title: "Zoos of the word"
+      description: "Get the information of diferent zooz"
+      version: "1.0.0"
+    # This field will be replaced by the deploy_api.sh script.
+    host: "localhost:5000"
+    schemes:
+      - "https"
+    paths:
+      "/api/zoos":
+        get:
+          description: "Get all zoos"
+          operationId: "/api/zoos"
+          parameters:
+          responses:
+            200:
+              description: "Success"
+              schema:
+                type: string
+            400:
+              description: "Error"
+        post: 
+          description: "Create a new zoo"
+          operationId: "/api/zoos"
+          parameters:
+            -
+              name: name
+              in: query
+              required: true
+              type: string
+            -
+              name: director
+              in: query
+              required: true
+              type: string
+            - 
+              name: employers
+              in: query
+              required: true
+              type: Array
+            -
+              name: animals
+              in: query
+              required: true
+              type: Array
+          responses:
+            200:
+              description: "Success"
+              schema:
+                type: string
+            400:
+              description: "Error"
+      "/api/zoos:id":
+        get:
+          description: "Get all zoos"
+          operationId: "/api/zoos"
+          parameters:
+            -
+              name: id
+              in: query
+              required: true
+              type: string
+          responses:
+            200:
+              description: "Success"
+              schema:
+                type: string
+            400:
+              description: "Error"
+    

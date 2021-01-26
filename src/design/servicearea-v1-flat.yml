@@ -1,0 +1,121 @@
+openapi: 3.0.2
+info:
+  title: Service Area
+  version: '1.0'
+  description: |
+    API for the area in which it's services
+  contact:
+    name: ME
+    url: 'blabla'
+    email: blabla@bla.com
+servers:
+  - url: 'https://PipelineVariable/v1/servicearea'
+paths:
+  /postalcodecheck:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - Postal code check
+      summary: Postal code check
+      operationId: post-servicearea-postalcodecheck
+      description: Checks if postal codes are in the service area of
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postalCodeCheckRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postalCodeCheckResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+components:
+  securitySchemes:
+    Bearer:
+      name: Authorization
+      in: header
+      type: apiKey
+      description: Azure Active Directory access token.
+  schemas:
+    postalCodeCheckRequest:
+      title: Postal code check request
+      description: A list of postal codes to check.
+      type: array
+      items:
+        $ref: '#/components/schemas/postalCodeItem'
+    postalCodeItem:
+      title: Postal code item
+      description: Object for postalcode.
+      type: object
+      properties:
+        postalCode:
+          description: Postal Code
+          type: string
+          example: 1234AB
+      required:
+        - postalCode
+    postalCodeCheckResponse:
+      title: Postal code check response
+      description: Returns a list of checked postal codes.
+      type: object
+      properties:
+        inServiceArea:
+          description: Returns true if all the requested postal codes are in the service area
+          type: boolean
+        postalCodes:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/postalCodeItem'
+              - type: object
+                properties:
+                  inServiceArea:
+                    description: Returns true if the postal code is in the service area
+                    type: boolean
+                required:
+                  - inServiceArea
+      required:
+        - inServiceArea
+    errorModelList:
+      title: List Error Model
+      description: Common defintion for a list of errors. To be used as body in combination with the HTTP status code.
+      type: object
+      properties:
+        errors:
+          uniqueItems: false
+          type: array
+          items:
+            $ref: '#/components/schemas/errorModel'
+    errorModel:
+      title: Error Model
+      description: Common defintion of an error. To be used as body in combination with the HTTP status code.
+      type: object
+      properties:
+        code:
+          type: string
+        property:
+          type: string
+        message:
+          type: string
