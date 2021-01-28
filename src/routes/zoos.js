@@ -17,7 +17,7 @@ module.exports = server => {
         } catch(err) {
             console.log(err);
         }
-        res.json("Anduvo bien");
+        res.json("OK");
     });
 
     // get single zoo data
@@ -59,7 +59,7 @@ module.exports = server => {
     });
 
     // update zoo
-    server.post('/api/zoos/:id', async (req, res) => {
+    server.put('/api/zoos/:id', async (req, res) => {
         if(req.is('application/json')){
             try {
                 //TODO

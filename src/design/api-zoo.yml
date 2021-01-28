@@ -1,71 +1,153 @@
 openapi: 3.0.2
-    info:
-      title: "Zoos of the word"
-      description: "Get the information of diferent zooz"
-      version: "1.0.0"
-    # This field will be replaced by the deploy_api.sh script.
-    host: "localhost:5000"
-    schemes:
-      - "https"
-    paths:
-      "/api/zoos":
-        get:
-          description: "Get all zoos"
-          operationId: "/api/zoos"
-          parameters:
-          responses:
-            200:
-              description: "Success"
+info:
+  title: Zooz of the word
+  version: '1.0'
+  description: |
+    API to handle the information of Zoos
+  contact:
+    name: Sarkis Panosian
+    url: 'blabla'
+    email: blabla@bla.com
+servers:
+  - url: 'https://localhost:5000'
+paths:
+  /api/zoos:
+    get:
+      tags:
+        - Zoos
+      summary: Get all Zoos.
+      operationId: getZoos
+      description: Returned an Array of all Zoos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
               schema:
-                type: string
-            400:
-              description: "Error"
-        post: 
-          description: "Create a new zoo"
-          operationId: "/api/zoos"
-          parameters:
-            -
-              name: name
-              in: query
-              required: true
-              type: string
-            -
-              name: director
-              in: query
-              required: true
-              type: string
-            - 
-              name: employers
-              in: query
-              required: true
-              type: Array
-            -
-              name: animals
-              in: query
-              required: true
-              type: Array
-          responses:
-            200:
-              description: "Success"
+                $ref: '#/components/schemas/Zoos'
+        '400':
+          description: Error
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - Zoos
+      summary: Create a new Zoo
+      operationId: postZoo
+      description: Create a new Zoo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Zoo'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Error
+  /api/zoos/{id}:
+    get:
+      tags:
+        - Zoos
+      summary: Get a Zoo.
+      operationId: getZooById
+      description: Returned a Zoo with the same id
+      parameters:
+        - name: id
+          in: path
+          description: Zoo ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
               schema:
-                type: string
-            400:
-              description: "Error"
-      "/api/zoos:id":
-        get:
-          description: "Get all zoos"
-          operationId: "/api/zoos"
-          parameters:
-            -
-              name: id
-              in: query
-              required: true
-              type: string
-          responses:
-            200:
-              description: "Success"
-              schema:
-                type: string
-            400:
-              description: "Error"
+                $ref: '#/components/schemas/Zoo'
+        '400':
+          description: Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Zoos
+      summary: Modify a Zoo
+      operationId: modifyZooById
+      description: Modify a Zoo with ID
+      parameters:
+        - name: id
+          in: path
+          description: Zoo ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Zoo'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Error
+    delete:
+      tags:
+        - Zoos
+      summary: Delete a Zoo.
+      operationId: deleteZooById
+      description: Delete a Zoo with the same id
+      parameters:
+        - name: id
+          in: path
+          description: Zoo ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Error
+components:
+  schemas:
+    Zoos:
+      title: Zoos
+      description: A list of Zoos
+      type: array
+      items:
+        $ref: '#/components/schemas/Zoo'
+    Zoo:
+      title: Zoo
+      description: Object for Zoo
+      type: object
+      properties:
+        name:
+          description: Name of the zoo
+          type: string
+          example: Example Name
+        director:
+          description: Director of the zoo
+          type: string
+          example: Example Director
+        employers:
+          description: Employers of the zoo
+          type: array
+          example: ["E1","E2"]
+        animals:
+          description: Animals of the zoo
+          type: array
+          example: ["A1","A2"]
+      required:
+        - name
+        - director
+        - employers
+        - animals  
+
+    
+    
     
