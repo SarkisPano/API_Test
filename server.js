@@ -19,6 +19,8 @@ const mongodb_url =  'mongodb+srv://testDB:ZHbvnOhBwSubm3uH@cluster0.kujwk.mongo
 const port = 5000;
 const port_https = 443;
 
+//********************** Security  */
+
 // api request limiter
 var apiLimiter = new rateLimit({
   windowMs: 15*60*1000, // 15 minutes
@@ -33,7 +35,11 @@ const createAccountLimiter = rateLimit({
   message:
     "Too many accounts created from this IP, please try again after an hour"
 });
+
+
 server.use('/api/userignup', createAccountLimiter);
+
+//********************************** */
 
 server.use(bodyParser.json());
 

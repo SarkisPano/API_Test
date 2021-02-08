@@ -19,17 +19,31 @@ paths:
       operationId: getZoos
       description: Returned an Array of all Zoos
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Zoos'
-        '400':
-          description: Error
+          '200':
+            description: OK
+            content:
+              application/json; charset=utf-8:
+                schema:
+                  $ref: '#/components/schemas/Zoos'
+          '400':
+            description: Bad request
+            content:
+              application/json; charset=utf-8:
+                schema:
+                  $ref: '#/components/schemas/errorModelList'
+          '401':
+            description: Unauthorized
+            content:
+              application/json; charset=utf-8:
+                schema:
+                  $ref: '#/components/schemas/errorModelList'
+          '500':
+            description: Internal Server Error
+            content:
+              application/json; charset=utf-8:
+                schema:
+                  $ref: '#/components/schemas/errorModelList'
     post:
-      security:
-        - Bearer: []
       tags:
         - Zoos
       summary: Create a new Zoo
@@ -42,10 +56,30 @@ paths:
               $ref: '#/components/schemas/Zoo'
         required: true
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
+          content:
+            text/plain; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/zoo'
         '400':
-          description: Error
+          description: Bad request
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
   /api/zoos/{id}:
     get:
       tags:
@@ -64,11 +98,27 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
+            application/json; charset=utf-8:
               schema:
                 $ref: '#/components/schemas/Zoo'
         '400':
-          description: Error
+          description: Bad request
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
     put:
       security:
         - Bearer: []
@@ -93,8 +143,28 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Zoo'
         '400':
-          description: Error
+          description: Bad request
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
     delete:
       tags:
         - Zoos
@@ -109,10 +179,32 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
         '400':
-          description: Error
+          description: Bad request
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '404':
+          description: Not Found
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/errorModelList'
 components:
   schemas:
     Zoos:
@@ -147,6 +239,27 @@ components:
         - director
         - employers
         - animals  
+    errorModelList:
+      title: List Error Model
+      description: Common defintion for a list of errors. To be used as body in combination with the HTTP status code.
+      type: object
+      properties:
+        errors:
+          uniqueItems: false
+          type: array
+          items:
+            $ref: '#/components/schemas/errorModel'
+    errorModel:
+      title: Error Model
+      description: Common defintion of an error. To be used as body in combination with the HTTP status code.
+      type: object
+      properties:
+        code:
+          type: string
+        property:
+          type: string
+        message:
+          type: string
 
     
     

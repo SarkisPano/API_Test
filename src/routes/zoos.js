@@ -14,30 +14,32 @@ module.exports = server => {
         try {
             const zoos = await Zoo.find({});
             res.json(zoos);
+            // res.sendStatus(200) respuesta automatica
         } catch(err) {
             console.log(err);
+            res.sendStatus(500);
         }
-        res.json("OK");
     });
 
     // get single zoo data
     server.get('/api/zoos/:id', async (req, res) => {
-        console.log("ADENTRO DEL GET");
         try {
-            const zoo = await Zoo.findById(req.params.id);
-            res.json(zoo);
-            
+            const zoo = await Zoo.findById(req.params.id, (err) => {
+                if(err){
+                    res.sendStatus(404);
+                }
+            });
+            res.json(zoo);           
         } catch(err) {
             console.log(err);
-            res.sendStatus(404);
+            res.sendStatus(500);
         }
     });
-
 
     // add zoo
     server.post('/api/zoos', async (req, res) => {
         if(req.is('application/json')){
-            // do something
+
             const { name, director, employers, animals } = req.body;
 
             const zoo = new Zoo({
@@ -50,11 +52,15 @@ module.exports = server => {
             // save zoo
             try {
                 const newZoo = await zoo.save();
-                res.sendStatus(201);
+                res.status(201).json(newZoo);
             } catch(err) {
                 console.log(err);
-                res.sendStatus(400);
+                res.sendStatus(500);
             }
+        } else {
+            res.status(400).json({
+                message: 'You only can send JSON request',
+            });
         }
     });
 
@@ -62,25 +68,35 @@ module.exports = server => {
     server.put('/api/zoos/:id', async (req, res) => {
         if(req.is('application/json')){
             try {
-                //TODO
-                // protect route and check token for the user
-                const user = await User.findOneAndUpdate({_id: req.params.id}, req.body );
-                res.sendStatus(200);
+                const chagedZoo = await Zoo.findOneAndUpdate({_id: req.params.id}, req.body, (err) => {
+                    if(err){
+                        res.sendStatus(404);
+                    }
+                } );
+                res.status(200).json(chagedZoo);
             } catch(err) {
-                res.sendStatus(404);
+                res.sendStatus(500);
             }
-        } // else give error
+        } else {
+            res.status(400).json({
+                message: 'You only can send JSON request',
+            });
+        }
     });
 
     // delete zoo
     server.delete('/api/zoos/:id', async (req, res) => {
         try {
-            //TODO
-            // protect route and check token for the zoo
-            const user = await User.findOneAndRemove({_id: req.params.id});
-            res.sendStatus(204);
+            const zoo = await Zoo.findById(req.params.id, async (err) => {
+                if(err){
+                    res.sendStatus(404);
+                } else {
+                    const deletedZoo = await Zoo.deleteOne({_id: req.params.id});
+                    res.sendStatus(204);
+                }
+            });
         } catch(err) {
-            res.sendStatus(404);
+            res.sendStatus(500);
         }
     });
 

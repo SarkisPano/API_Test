@@ -14,13 +14,11 @@ const ZooSchema = new mongoose.Schema({
     },
     employers: {
         type: Array,
-        required: true,
-        trim: true
+        required: true
     },
     animals: {
         type: Array,
-        required: true,
-        trim: true
+        required: true
     },
 });
 
